@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Form Pemesanan</title>
+  <style>
+    body { 
+    font-family: Arial, sans-serif;
+    background: #fff7f0;
+    margin: 0;
+    padding: 0;
+    }
+    
+    nav { 
+    text-align: right;
+    background: #ffcc99;
+    padding: 10px; 
+    }
+    
+    nav a { 
+    margin: 0 10px;
+    color: #333;
+    text-decoration: none;
+    font-weight: bold; 
+    }
+    
+    nav marquee {
+        color: #333;
+    }
+    
+    h1 { 
+    text-align: center;
+    margin: 20px 0;
+    position: relative; 
+    }
+    
+    h1::before, h1::after { 
+    content: '---';
+    color: #ccc;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%); 
+    }
+    
+    h1::before { 
+    left: 10%; 
+    }
+    
+    h1::after  { 
+    right: 10%; 
+    }
+    
+    hr { 
+    border: none;
+    border-top: 1px dashed #ddd;
+    margin:20px 0; 
+    }
+
+    .form-container {
+      background: #fff;
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 800px;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+    }
+    
+    input { 
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px; 
+    }
+
+    .form-container h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom:20px;
+      box-shadow: 0 0 3px rgba(0,0,0,0.1);
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    
+    .button-prev-inv {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    
+    .button-inv {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .button-group button {
+      width: 48%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .button-prev-inv button {
+        width: 48%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    
+    .button-inv button {
+        width: 48%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .btn-ok {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .btn-batal {
+      background-color: #f44336;
+      color: white;
+    }
+    
+    #preview-invoice {
+        display: none;
+    }
+    
+    #invoice {
+        display: none;
+    }
+    
+    .invoice-section {
+        background: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 0 5px rgba(0,0,0,0.1); 
+    }
+    
+    .invoice-header { 
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; 
+    }
+    
+    .invoice-header img { 
+    max-height: 60px;
+    }
+    
+    table { 
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px; 
+    }
+    
+    th, td { 
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+    }
+    
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+    
+    .totals { 
+    margin-top: 15px;
+    text-align: right; 
+    }
+    
+    .Logo-invoice { 
+    text-align: center;
+    margin-top: 20px; 
+    }
+    
+    .Logo-invoice img { 
+    max-width: 60px;
+    max-height: 60px;
+    height:auto; 
+    }
+    
+    .footer {
+        background: #ffcc99;
+        text-align: center;
+        padding: 10px;
+    }
+    
+    .footer p {
+        font-weight: bold;
+        color: #333;
+    }
+  </style>
+</head>
+<body>
+    <!-- Navigasi -->
+    <nav>
+    <a href="index.html">Beranda</a>
+    <a href="view.html">Lihat Produk</a>
+    <marque>Harga dapat berubah sewaktu-waktu tanpa pemberitahuan.</marque>
+  </nav>
+<!-- Form pemesanan -->
+  <div class="form-container" id="form-container">
+    <h1>Form Pemesanan</h1>
+    <div class="form-group">
+      <label for="nama">Nama:</label>
+      <input type="text" id="nama" placeholder="Ketik nama Anda">
+      <label for="wa">No. Whatsapp:</label>
+      <input type="text" id="wa" placeholder="Ketik nomor Whatsapp Anda yang aktif">
+      <label for="alamat">Alamat:</label>
+      <input type="text" id="alamat" placeholder="Ketik Alamat Anda">
+      </div>
+    <div class="button-group" id="button-group">
+      <button class="btn-ok" onclick="submitForm()">Ok</button>
+      <button class="btn-batal" onclick="resetForm()">Batal</button>
+    </div>
+  </div>
+<hr>
+<!-- Preview Invoice -->
+<div class="preview-invoice" id="preview-invoice">
+<div class="invoice-section preview-section" id="preview">
+    <h1>Preview Pemesanan</h1>
+      <div class="invoice-header">
+        <div>
+          <p><strong>Customer:</strong> <span id="pNama"></span></p>
+          <p><strong>Whatsapp:</strong> <span id="pWa"></span></p>
+          <p><strong>Alamat:</strong> <span id="pAlamat"></span></p>
+        </div>
+        <img src="logo-hd.png" alt="Logo">
+        <p><strong>Konfirmasi Pesanan:</strong> <span id="confirm-prev-order"></span></p>
+      </div>
+      <table id="cartTable">
+        <thead><tr><th>No</th><th>Nama Item</th><th>Harga Satuan</th><th>Qty</th><th>Jumlah</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="totals">
+        <p>Subtotal: Rp <span id="subVal">0</span></p>
+        <p>Biaya Ongkir: Rp <span id="ongkirVal">0</span></p>
+        <p><strong>Total Akhir: Rp <span id="totalVal">0</span></strong></p>
+      </div>
+      </div>
+      <hr>
+      <div class="button-prev-inv" id="button-prev-inv">
+      <button class="btn-ok" onclick="konfirmasiPesanan()">Konfirmasi Pesanan</button>
+      <button class="btn-batal" onclick="batalkanPesanan()">Batalkan Pesanan</button>
+    </div>
+      </div>
+      <hr>
+      <!-- Invoice Ditampilkan -->
+      <div class="invoice" id="invoice">
+<div class="invoice-section" id="invoice-section">
+    <h1>Invoice Pemesanan</h1>
+      <div class="invoice-header">
+        <div>
+          <p><strong>Customer:</strong> <span id="inv-Nama"></span></p>
+          <p><strong>Whatsapp:</strong> <span id="inv-Wa"></span></p>
+          <p><strong>Alamat:</strong> <span id="inv-Alamat"></span></p>
+        </div>
+        <img src="logo-hd.png" alt="Logo">
+        <p><strong>No. Invoice:</strong> <span id="invoiceNo"></span></p>
+      </div>
+      <table id="cart-Table">
+        <thead><tr><th>No</th><th>Nama Item</th><th>Harga Satuan</th><th>Qty</th><th>Jumlah</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="totals">
+        <p>Subtotal: Rp <span id="subtot-inv">0</span></p>
+        <p>Biaya Ongkir: Rp <span id="ongkir-inv">0</span></p>
+        <p><strong>Total Akhir: Rp <span id="totalAkhir-inv">0</span></strong></p>
+      </div>
+      <div class="Logo-invoice">
+        <img src="logo-invoice.png" alt="Logo Invoice">
+        <p>Scan untuk membayar via QRIS</p>
+      </div>
+      </div>
+      <div class="button-inv" id="button-inv">
+      <button class="btn-ok" onclick="unduhInv()">Unduh Invoice</button>
+      <button class="btn-ok" onclick="kirimWa()">Kirim ke WhatsApp</button>
+      <button class="btn-ok" onclick="viewInv()" style="margin-top:10px;">Lihat Invoice</button>
+    </div>
+      </div>
+      <div class="footer">
+      <p>Belanja banyak makin untung! Minimal Rp200.000, pesanan langsung kami antar.</p>
+      <p style="font-size:9px;">&copy; All rights reserved. <b>Frozen Food Ryan</b></p>
+      
+          </div>
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+      
+  <script>
+    function submitForm() {
+      const nama = document.getElementById("nama").value;
+      const wa = document.getElementById("wa").value;
+      const alamat = document.getElementById("alamat").value;
+      
+      document.getElementById('pNama').innerText = document.getElementById('nama').value;
+      document.getElementById('pWa').innerText = document.getElementById('wa').value;
+      document.getElementById('pAlamat').innerText = document.getElementById('alamat').value;
+      
+
+      if (nama && wa && alamat) {
+        alert("Form dikirim!\n\nNama: " + nama + "\nWA: " + wa + "\nAlamat: " + alamat);
+        renderCart();
+        
+        document.getElementById('form-container').style.display = 'none';
+document.getElementById('button-group').style.display = 'none';
+document.getElementById('preview-invoice').style.display = 'block';
+        
+      } else {
+        alert("Mohon lengkapi semua kolom.");
+      }
+    }
+
+    function resetForm() {
+      document.getElementById("nama").value = "";
+      document.getElementById("wa").value = "";
+      document.getElementById("alamat").value = "";
+    }
+    
+    function renderCart() {
+      const cart = JSON.parse(localStorage.getItem('cart'))||[];
+      const tbody = document.querySelector('#cartTable tbody'); tb  = tbody; tb.innerHTML=''; let sub=0,qty=0;
+      cart.forEach((it,i)=>{
+        const total=it.price*it.qty; sub+=total; qty+=it.qty;
+        tb.insertAdjacentHTML('beforeend',`<tr><td>${i+1}</td><td>${it.name}</td><td>Rp${it.price.toLocaleString()}</td><td>${it.qty}</td><td>Rp${total.toLocaleString()}</td></tr>`);
+      });
+      
+      let ong=0; if(qty<5) ong=7000; else if(qty<=11) ong=15000; else if(qty<=16) ong=sub*0.12; else if(qty<=24) ong=sub*0.18;
+      document.getElementById('subVal').innerText=sub.toLocaleString();
+      document.getElementById('ongkirVal').innerText=Math.round(ong).toLocaleString();
+      document.getElementById('totalVal').innerText=Math.round(sub+ong).toLocaleString();
+      }
+      
+      function konfirmasiPesanan() {
+          alert('Konfirmasi pesanan?');
+          
+         const nama = document.getElementById("nama").value;
+      const wa = document.getElementById("wa").value;
+      const alamat = document.getElementById("alamat").value;
+          document.getElementById('inv-Nama').innerText = document.getElementById('nama').value;
+      document.getElementById('inv-Wa').innerText = document.getElementById('wa').value;
+      document.getElementById('inv-Alamat').innerText = document.getElementById('alamat').value;
+      
+      document.getElementById('form-container').style.display = 'none';
+document.getElementById('button-group').style.display = 'none';
+document.getElementById('preview-invoice').style.display = 'none';
+
+document.getElementById('invoice').style.display = 'block';
+document.getElementById('button-inv').style.display = 'block';
+
+renderCartinv();
+
+document.getElementById('invoiceNo').innerText = generateInvoiceNumber();
+
+saveInvoiceData();
+      }
+      
+      function renderCartinv() {
+      const cart = JSON.parse(localStorage.getItem('cart'))||[];
+      const tbody = document.querySelector('#cart-Table tbody'); tb  = tbody; tb.innerHTML=''; let sub=0,qty=0;
+      cart.forEach((it,i)=>{
+        const total=it.price*it.qty; sub+=total; qty+=it.qty;
+        tb.insertAdjacentHTML('beforeend',`<tr><td>${i+1}</td><td>${it.name}</td><td>Rp${it.price.toLocaleString()}</td><td>${it.qty}</td><td>Rp${total.toLocaleString()}</td></tr>`);
+      });
+      
+      let ong=0; if(qty<5) ong=7000; else if(qty<=11) ong=15000; else if(qty<=16) ong=sub*0.12; else if(qty<=24) ong=sub*0.18;
+      document.getElementById('subtot-inv').innerText=sub.toLocaleString();
+      document.getElementById('ongkir-inv').innerText=Math.round(ong).toLocaleString();
+      document.getElementById('totalAkhir-inv').innerText=Math.round(sub+ong).toLocaleString();
+      }
+      
+      function generateInvoiceNumber() {
+  const now = new Date();
+  const timestamp = now.getFullYear().toString() +
+                    (now.getMonth() + 1).toString().padStart(2, '0') +
+                    now.getDate().toString().padStart(2, '0') +
+                    now.getHours().toString().padStart(2, '0') +
+                    now.getMinutes().toString().padStart(2, '0') +
+                    now.getSeconds().toString().padStart(2, '0');
+  return `INV-${timestamp}`;
+}
+    
+    function saveInvoiceData() {
+  const invoiceData = {
+    invoiceNo: document.getElementById('invoiceNo').innerText,
+    nama: document.getElementById('inv-Nama').innerText,
+    wa: document.getElementById('inv-Wa').innerText,
+    alamat: document.getElementById('inv-Alamat').innerText,
+    cart: JSON.parse(localStorage.getItem('cart')) || [],
+    subtotal: document.getElementById('subtot-inv').innerText,
+    ongkir: document.getElementById('ongkir-inv').innerText,
+    total: document.getElementById('totalAkhir-inv').innerText,
+    tanggal: new Date().toLocaleString()
+  };
+
+  let invoices = JSON.parse(localStorage.getItem('invoices')) || [];
+  invoices.push(invoiceData);
+  localStorage.setItem('invoices', JSON.stringify(invoices));
+}
+
+
+function batalkanPesanan() {
+    alert('Pesanan telah dibatalkan');
+    
+    ['nama','wa','alamat'].forEach(id=>document.getElementById(id).value='');
+      localStorage.removeItem('cart'); 
+      document.getElementById('preview').style.display='none';
+      
+      document.getElementById('button-prev-inv').style.display='none';
+      document.getElementById('form-container').style.display='block';
+      
+      document.getElementById('button-group').style.display='block';
+    }
+    
+    function unduhInv() {
+  // Ambil nama dan nomor invoice dari elemen HTML
+  const nama = document.getElementById('inv-Nama').innerText.trim().replace(/\s+/g, '_');
+  const nomorInvoice = document.getElementById('invoiceNo').innerText.trim().replace(/\s+/g, '_');
+
+  // Nama file dinamis
+  const namaFile = `invoice_${nama}_${nomorInvoice}.png`;
+
+  // Generate gambar dari invoice-section
+  html2canvas(document.getElementById('invoice-section')).then(canvas => {
+    const a = document.createElement('a');
+    a.download = namaFile;
+    a.href = canvas.toDataURL();
+    a.click();
+  });
+    }
+    
+    
+    // redirect invoice dari halaman order ke halaman invoice
+    
+    function viewInv() {    
+             
+             const cart = JSON.parse(localStorage.getItem('cart'))||[];
+         
+        // Ambil data dari form
+const nama = document.getElementById('inv-Nama').innerText;
+const alamat = document.getElementById('inv-Alamat').innerText;
+const wa = document.getElementById('inv-Wa').innerText;
+const inv = document.getElementById('invoiceNo').innerText;
+
+// Simpan produk ke variabel produkJSON
+
+const produkJSON = encodeURIComponent(JSON.stringify(cart));
+
+// Redirect ke invoice.html
+window.location.href = `invoice.html?nama=${encodeURIComponent(nama)}&alamat=${encodeURIComponent(alamat)}&inv=${encodeURIComponent(inv)}&wa=${encodeURIComponent(wa)}&produk=${produkJSON}`;
+    }
+  
+  </script>
+
+</body>
+</html>

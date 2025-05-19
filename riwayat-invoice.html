@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Riwayat Invoice</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    
+    h1 { 
+    text-align: center;
+    margin: 20px 0;
+    position: relative; 
+    }
+    
+    h1::before, h1::after { 
+    content: '---';
+    color: #ccc;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%); 
+    }
+    
+    h1::before { 
+    left: 10%; 
+    }
+    
+    h1::after  { 
+    right: 10%; 
+    }
+    
+    hr { 
+    border: none;
+    border-top: 1px dashed #ddd;
+    margin:20px 0; 
+    }
+    
+    input[type="text"] {
+      padding: 8px;
+      width: 300px;
+      margin-bottom: 10px;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+    
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    
+    button {
+        margin: 2px;
+        padding: 5px 10px;
+        cursor: pointer;
+        position: center;
+    }
+    
+  </style>
+</head>
+<body>
+  <h1>Riwayat Invoice Pemesanan</h1>
+  <hr>
+
+  <label for="search">Cari Invoice:</label>
+  <input type="text" id="search" placeholder="Contoh: INV-2025...">
+
+  <table id="invoiceTable">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Invoice</th>
+        <th>Customer</th>
+        <th>WA</th>
+        <th>Alamat</th>
+        <th>Total</th>
+        <th>Tanggal</th>
+        <th>Status</th>
+        <th>Detail</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Data akan dimasukkan lewat JS -->
+    </tbody>
+  </table>
+  <hr>
+
+  <script>
+    const invoices = JSON.parse(localStorage.getItem('invoices')) || [];
+    const tbody = document.querySelector('#invoiceTable tbody');
+
+    function tampilkanData(dataArray) {
+      tbody.innerHTML = "";
+      dataArray.forEach((data, i) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${i + 1}</td>
+          <td>${data.invoiceNo}</td>
+          <td>${data.nama}</td>
+          <td>${data.wa}</td>
+          <td>${data.alamat}</td>
+          <td>Rp${data.total}</td>
+          <td>${data.tanggal}</td>
+          <td>Status</td>
+          <td>
+  <button onclick='alertDetail(${i})'>Lihat Invoice</button>
+  <button onclick='hapusInvoice(${i})'>Hapus Invoice</button>
+</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function alertDetail(index) {
+      const data = invoices[index];
+      let msg = `Invoice: ${data.invoiceNo}\nCustomer: ${data.nama}\nWA: ${data.wa}\nAlamat: ${data.alamat}\n\nPesanan:\n`;
+      data.cart.forEach(item => {
+        msg += `- ${item.name} x${item.qty} = Rp${(item.price * item.qty).toLocaleString()}\n`;
+      });
+      msg += `\nSubtotal: Rp${data.subtotal}\nOngkir: Rp${data.ongkir}\nTotal: Rp${data.total}\nTanggal: ${data.tanggal}`;
+      alert(msg);
+    }
+    
+    function hapusInvoice(index) {
+    alertDetail(index);
+  const konfirmasi = confirm("Yakin ingin menghapus invoice ini?");
+  if (konfirmasi) {
+    invoices.splice(index, 1); // hapus dari array
+    localStorage.setItem('invoices', JSON.stringify(invoices)); // simpan kembali
+    tampilkanData(invoices); // refresh tampilan
+  }
+}
+
+    // Tampilkan semua data saat awal
+    tampilkanData(invoices);
+
+    // Event pencarian
+    document.getElementById("search").addEventListener("input", function() {
+      const keyword = this.value.trim().toLowerCase();
+      const hasilFilter = invoices.filter(inv =>
+        inv.invoiceNo.toLowerCase().includes(keyword)
+      );
+      tampilkanData(hasilFilter);
+    });
+  </script>
+</body>
+</html>

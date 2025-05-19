@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice Pesanan</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+    .invoice {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: auto;
+    }
+    .product-list { margin-top:100px; margin-bottom:100px;}
+    h2 { text-align: center; }
+    .item { margin-bottom: 10px; flex-direction: column; }
+  </style>
+</head>
+<body>
+  <div class="invoice">
+    <h2>Invoice Pesanan</h2>
+    <hr>
+    <p><strong>Nama:</strong> <span id="nama"></span></p>
+    <p><strong>Alamat:</strong> <span id="alamat"></span></p>
+    <p><strong>No. whatsapp:</strong> <span id="wa"></span></p>
+    <p><strong>No. Invoice:</strong> <span id="inv"></span></p>
+    <hr>
+    <div class="product-list "id="produk-list"></div>
+    <hr>
+    <p><strong>Subtotal:</strong> Rp<span id="subtotal"></span></p>
+    <p><strong>Biaya Ongkir:</strong> Rp<span id="biaya-ongkir"></span></p>
+    <p><strong>Total Akhir:</strong> Rp<span id="total-akhir"></span></p>
+  <hr>
+  <div class="info-footer">
+      <h2 style="font-size:14px; margin-top:50px;">Terima kasih telah berbelanja di Frozen Food Ryan! Mohon diperhatikan, semua pembelian bersifat final dan tidak dapat ditukar atau dikembalikan.</h2>
+      <h2 style="font-size:10px; margin-top:100px; text-align:center;">Invoice ini dibuat secara otomatis setelah pemesanan berhasil diselesaikan.</h2>
+      <h2 style="font-size:10px; text-align:center;">&copy; diharapkan tidak mengubah tampilan dari invoice.</h2>
+  </div>
+  </div>
+
+  <script>
+  function tampilkanInvoice() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const nama = urlParams.get('nama');
+    const alamat = urlParams.get('alamat');
+    const wa = urlParams.get('wa');
+    const noInv = urlParams.get('inv');
+    const produkRaw = urlParams.get('produk');
+
+    document.getElementById('nama').textContent = nama;
+    document.getElementById('alamat').textContent = alamat;
+    
+    document.getElementById('wa').textContent = wa;
+    
+    document.getElementById('inv').textContent = noInv;
+
+    let total = 0;
+    let totalQty = 0;
+    const listEl = document.getElementById('produk-list');
+    const produk = JSON.parse(decodeURIComponent(produkRaw));
+
+    produk.forEach(item => {
+      const subtotal = item.qty * item.price;
+      total += subtotal;
+      totalQty += item.qty;
+
+      const div = document.createElement('div');
+      div.className = 'item';
+      div.innerHTML = `${item.name} (${item.qty} x Rp${item.price.toLocaleString('id-ID')}) = <strong>Rp${subtotal.toLocaleString('id-ID')}</strong>`;
+      listEl.appendChild(div);
+    });
+
+    // Hitung biaya ongkir berdasarkan kuantitas
+    let biayaOngkir = 0;
+    if (totalQty < 5) {
+      biayaOngkir = 7000;
+    } else if (totalQty <= 11) {
+      biayaOngkir = 15000;
+    } else if (totalQty <= 16) {
+      biayaOngkir = total * 0.12;
+    } else if (totalQty <= 24) {
+      biayaOngkir = total * 0.18;
+    }
+
+    const totalAkhir = total + biayaOngkir;
+
+    document.getElementById('subtotal').textContent = total.toLocaleString('id-ID');
+    document.getElementById('biaya-ongkir').textContent = Math.round(biayaOngkir).toLocaleString('id-ID');
+    document.getElementById('total-akhir').textContent = Math.round(totalAkhir).toLocaleString('id-ID');
+    
+    localStorage.removeItem('cart');
+  }
+
+  tampilkanInvoice();
+</script>
+  
+</body>
+</html>

@@ -1,0 +1,8 @@
+[build]
+  publish = "."               # Folder public (root karena HTML langsung di sini)
+  functions = "netlify/functions"  # Folder function Netlify
+
+[[redirects]]
+  from = "/.netlify/functions/*"
+  to = "/.netlify/functions/:splat"
+  status = 200

@@ -1,0 +1,7 @@
+// Manage cart using localStorage function getCart() { return JSON.parse(localStorage.getItem('cart') || '[]'); } function saveCart(cart) { localStorage.setItem('cart', JSON.stringify(cart)); } function addToCart(name, price) { const cart = getCart(); cart.push({ name, price }); saveCart(cart); alert(name + ' telah ditambahkan ke keranjang.'); }
+
+// On order.html: render invoice function renderInvoice() { const cart = getCart(); const container = document.getElementById('invoice-items'); if (!container) return; container.innerHTML = ''; let total = 0; cart.forEach((item, i) => { const div = document.createElement('div'); div.textContent = (i+1) + '. ' + item.name + ' - Rp' + item.price.toLocaleString(); container.appendChild(div); total += item.price; }); document.getElementById('invoice-total').textContent = 'Total: Rp' + total.toLocaleString(); }
+
+function sendWhatsApp() { const cart = getCart(); if (cart.length === 0) { alert('Keranjang kosong!'); return; } let text = 'Invoice Frozen Food Ryan%0A'; let total = 0; cart.forEach((item, i) => { text += ${i+1}. ${item.name} - Rp${item.price.toLocaleString()}%0A; total += item.price; }); text += *Total*: Rp${total.toLocaleString()}%0A; text += %0ANomor WA: 0877-8578-3525; const url = https://wa.me/62877785783525?text=${text}; window.open(url, '_blank'); }
+
+// Initialize invoice on load if (window.location.pathname.endsWith('order.html')) { document.addEventListener('DOMContentLoaded', renderInvoice); }
